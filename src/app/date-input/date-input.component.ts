@@ -26,8 +26,15 @@ export class DateInputComponent implements ControlValueAccessor {
 
   private readonly ASCII_0 = 48;
   private readonly ASCII_9 = 57;
-  private readonly ASCII_PUNKT = 46;
+  private readonly KEYCODE_PUNKT = 190;
   private readonly KEYCODE_PASTE = 118;
+
+  private readonly DAY_MIN = '1';
+  private readonly DAY_MAX = '31';
+  private readonly MONTH_MIN = '1';
+  private readonly MONTH_MAX = '12';
+  private readonly YEAR_MIN = '1900';
+  private readonly YEAR_MAX = new Date().getFullYear().toString();
 
   @ViewChild('day') dayInputRef: ElementRef;
   @ViewChild('month') monthInputRef: ElementRef;
@@ -36,7 +43,7 @@ export class DateInputComponent implements ControlValueAccessor {
   constructor(private renderer: Renderer2) {}
 
   writeValue(value: string): void {
-    const date: Date = new Date(value);
+    const date = new Date(value);
 
     if (this.isValidDate(date)) {
       this.dayValue = this.formatWithLeadingZero(date.getDate());
@@ -57,35 +64,8 @@ export class DateInputComponent implements ControlValueAccessor {
     this.disabled = isDisabled;
   }
 
-  onKeypressDay(event: KeyboardEvent): boolean {
-    if (this.isDotKey(event.charCode) && this.monthNode) {
-      this.addLeadingZeroToDay();
-      this.monthNode.focus();
-      return false;
-    }
-
-    return this.onKeypress(event);
-  }
-
-  onKeypressMonth(event: KeyboardEvent): boolean {
-    if (this.isDotKey(event.charCode) && this.yearNode) {
-      this.addLeadingZeroToMonth();
-      this.yearNode.focus();
-      return false;
-    }
-
-    return this.onKeypress(event);
-  }
-
-  onKeypressYear(event: KeyboardEvent): boolean {
-    return this.onKeypress(event);
-  }
-
   onKeypress(event: KeyboardEvent): boolean {
-    if (this.isNumberKey(event.keyCode) || this.isPasteKey(event.keyCode) || this.isNavigationKey(event.key)) {
-      return true;
-    }
-    return false;
+    return this.isNumberKey(event.keyCode) || this.isPasteKey(event.keyCode) || this.isNavigationKey(event.key);
   }
 
   onKeydownDay(event: KeyboardEvent): boolean {
@@ -101,8 +81,7 @@ export class DateInputComponent implements ControlValueAccessor {
       }
     }
 
-    if (this.isRightKey(event.key) && this.monthNode) {
-      this.addLeadingZeroToDay();
+    if ((this.isRightKey(event.key) || this.isDotKey(event.keyCode)) && this.monthNode) {
       this.monthNode.focus();
     }
     if (this.isDeleteKey(event.key)) {
@@ -126,11 +105,9 @@ export class DateInputComponent implements ControlValueAccessor {
     }
 
     if (this.isLeftKey(event.key) && this.dayNode) {
-      this.addLeadingZeroToMonth();
       this.dayNode.focus();
     }
-    if (this.isRightKey(event.key) && this.yearNode) {
-      this.addLeadingZeroToMonth();
+    if ((this.isRightKey(event.key) || this.isDotKey(event.keyCode)) && this.yearNode) {
       this.yearNode.focus();
     }
     if (this.isDeleteKey(event.key)) {
@@ -156,6 +133,42 @@ export class DateInputComponent implements ControlValueAccessor {
 
     this.setOuterValue();
     return true;
+  }
+
+  onLoseFocusDay(event: FocusEvent) {
+    const input = event.target as HTMLInputElement;
+    if (input.value.length === 1) {
+      this.addLeadingZeroToDay();
+    }
+    if (input.valueAsNumber < Number(this.DAY_MIN)) {
+      this.dayValue = this.DAY_MIN;
+    }
+    if (input.valueAsNumber > Number(this.DAY_MAX)) {
+      this.dayValue = this.DAY_MAX;
+    }
+  }
+
+  onLoseFocusMonth(event: FocusEvent) {
+    const input = event.target as HTMLInputElement;
+    if (input.value.length === 1) {
+      this.addLeadingZeroToMonth();
+    }
+    if (input.valueAsNumber < Number(this.MONTH_MIN)) {
+      this.monthValue = this.MONTH_MIN;
+    }
+    if (input.valueAsNumber > Number(this.MONTH_MAX)) {
+      this.monthValue = this.MONTH_MAX;
+    }
+  }
+
+  onLoseFocusYear(event: FocusEvent) {
+    const input = event.target as HTMLInputElement;
+    if (input.valueAsNumber < Number(this.YEAR_MIN)) {
+      this.yearValue = this.YEAR_MIN;
+    }
+    if (input.valueAsNumber > Number(this.YEAR_MAX)) {
+      this.yearValue = this.YEAR_MAX;
+    }
   }
 
   onTouchedDay(): void {
@@ -307,6 +320,6 @@ export class DateInputComponent implements ControlValueAccessor {
   }
 
   private isDotKey(charCode: number): boolean {
-    return charCode === this.ASCII_PUNKT;
+    return charCode === this.KEYCODE_PUNKT;
   }
 }
