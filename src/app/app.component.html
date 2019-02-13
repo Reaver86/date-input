@@ -1,4 +1,4 @@
-<app-date-input [formControl]="date" placeholder="12.05.1985"></app-date-input>
+<app-date-input [formControl]="date" placeholder="12.05.1985" [type]="dateType"></app-date-input>
 
 <div style="margin-top: 20px;">Value: {{ date.value | json }}</div>
 <div style="margin-top: 20px;">Touched: {{ date.touched | json }}</div>

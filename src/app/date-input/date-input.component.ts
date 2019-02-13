@@ -1,5 +1,10 @@
-import { Component, ElementRef, ViewChild, Renderer2, Input } from '@angular/core';
+import { Component, ElementRef, ViewChild, Input, Renderer2, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
+export enum DateType {
+  Birthday = "BIRTHDAY",
+  Default = "DEFAULT"
+}
 
 @Component({
   selector: 'app-date-input',
@@ -13,8 +18,9 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     }
   ]
 })
-export class DateInputComponent implements ControlValueAccessor {
+export class DateInputComponent implements ControlValueAccessor, OnInit {
   @Input() placeholder = '21.01.1990';
+  @Input() type = DateType.Default;
 
   onChange: (string) => void;
   onTouched: () => void;
@@ -33,14 +39,30 @@ export class DateInputComponent implements ControlValueAccessor {
   private readonly DAY_MAX = '31';
   private readonly MONTH_MIN = '1';
   private readonly MONTH_MAX = '12';
-  private readonly YEAR_MIN = '1900';
-  private readonly YEAR_MAX = new Date().getFullYear().toString();
+  private YEAR_MIN;
+  private YEAR_MAX;
 
   @ViewChild('day') dayInputRef: ElementRef;
   @ViewChild('month') monthInputRef: ElementRef;
   @ViewChild('year') yearInputRef: ElementRef;
 
-  constructor(private renderer: Renderer2) {}
+  constructor(private renderer: Renderer2) {
+  }
+
+  ngOnInit(): void {
+    const currentYear = new Date().getFullYear();
+    switch (this.type) {
+      case DateType.Birthday:
+        this.YEAR_MIN = (currentYear - 80).toString();
+        this.YEAR_MAX = currentYear.toString();
+        break;
+      case DateType.Default:
+      default:
+        this.YEAR_MIN = 1900;
+        this.YEAR_MAX = 2100;
+        break;
+    }
+  }
 
   writeValue(value: string): void {
     const date = new Date(value);
@@ -65,19 +87,29 @@ export class DateInputComponent implements ControlValueAccessor {
   }
 
   onKeypress(event: KeyboardEvent): boolean {
-    return this.isNumberKey(event.keyCode) || this.isPasteKey(event.keyCode) || this.isNavigationKey(event.key);
+    return this.isNumberKey(event.keyCode) || this.isPasteKey(event.keyCode);
   }
 
   onKeydownDay(event: KeyboardEvent): boolean {
     if (this.isNumberKey(event.keyCode)) {
-      if (this.dayValue.length === 1 && this.monthNode) {
-        event.preventDefault();
+      if (this.dayValue.length === 0) {
+        if (Number(event.key) > 3) {
+          this.dayValue = '0' + event.key;
+          event.preventDefault();
+          this.monthNode.focus();
+        }
+      } else if (this.dayValue.length === 1 && this.monthNode) {
         this.dayValue += event.key;
+        event.preventDefault();
         this.monthNode.focus();
-        return false;
       } else if (this.dayValue.length === 2) {
         event.preventDefault();
-        this.dayValue = event.key;
+        if (Number(event.key) > 3) {
+          this.dayValue = '0' + event.key;
+          this.monthNode.focus();
+        } else {
+          this.dayValue = event.key;
+        }
       }
     }
 
@@ -94,13 +126,24 @@ export class DateInputComponent implements ControlValueAccessor {
 
   onKeydownMonth(event: KeyboardEvent): boolean {
     if (this.isNumberKey(event.keyCode)) {
-      if (this.monthValue.length === 1 && this.yearNode) {
+      if (this.monthValue.length === 0) {
+        if (Number(event.key) > 1) {
+          this.monthValue = '0' + event.key;
+          event.preventDefault();
+          this.yearNode.focus();
+        }
+      } else if (this.monthValue.length === 1 && this.yearNode) {
         event.preventDefault();
         this.monthValue += event.key;
         this.yearNode.focus();
       } else if (this.monthValue.length === 2) {
         event.preventDefault();
-        this.monthValue = event.key;
+        if (Number(event.key) > 1) {
+          this.monthValue = '0' + event.key;
+          this.yearNode.focus();
+        } else {
+          this.monthValue = event.key;
+        }
       }
     }
 
@@ -119,9 +162,28 @@ export class DateInputComponent implements ControlValueAccessor {
   }
 
   onKeydownYear(event: KeyboardEvent): boolean {
-    if (this.isNumberKey(event.keyCode) && this.yearValue.length === 4) {
-      event.preventDefault();
-      this.yearValue = event.key;
+    if (this.isNumberKey(event.keyCode)) {
+
+      if (this.type === DateType.Birthday) {
+        if (this.yearValue.length === 1) {
+          const currentValue = Number(this.yearValue + event.key);
+          const currentYear = this.YEAR_MAX.slice(-2);
+          if (currentValue === 19 || currentValue === 20) {
+            return true;
+          } else if (currentValue > currentYear) {
+            this.yearValue = '19' + currentValue.toString();
+            return false;
+          } else if (currentValue <= currentYear) {
+            this.yearValue = '20' + currentValue.toString();
+            return false;
+          }
+        }
+      }
+
+      if (this.yearValue.length === 4) {
+        event.preventDefault();
+        this.yearValue = event.key;
+      }
     }
 
     if (this.isLeftKey(event.key) && this.monthNode) {
@@ -208,15 +270,11 @@ export class DateInputComponent implements ControlValueAccessor {
   }
 
   private addLeadingZeroToDay() {
-    if (this.dayValue.length === 1) {
-      this.dayValue = '0' + this.dayValue;
-    }
+    this.dayValue = '0' + this.dayValue;
   }
 
   private addLeadingZeroToMonth() {
-    if (this.monthValue.length === 1) {
-      this.monthValue = '0' + this.monthValue;
-    }
+    this.monthValue = '0' + this.monthValue;
   }
 
   private matchGermanDate(value: string): string[] {
@@ -291,14 +349,6 @@ export class DateInputComponent implements ControlValueAccessor {
     return keyCode === this.KEYCODE_PASTE;
   }
 
-  private isNavigationKey(key: string): boolean {
-    return this.isDeleteKey(key) || this.isArrowKey(key);
-  }
-
-  private isArrowKey(key: string): boolean {
-    return this.isLeftKey(key) || this.isRightKey(key) || this.isUpKey(key) || this.isDownKey(key);
-  }
-
   private isDeleteKey(key: string): boolean {
     return key === 'Backspace' || key === 'Delete' || key === 'Clear';
   }
@@ -309,14 +359,6 @@ export class DateInputComponent implements ControlValueAccessor {
 
   private isRightKey(key: string): boolean {
     return key === 'ArrowRight' || key === 'Right';
-  }
-
-  private isUpKey(key: string): boolean {
-    return key === 'ArrowUp' || key === 'Up';
-  }
-
-  private isDownKey(key: string): boolean {
-    return key === 'ArrowDown' || key === 'Down';
   }
 
   private isDotKey(charCode: number): boolean {
