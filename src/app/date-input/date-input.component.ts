@@ -42,6 +42,8 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
   private YEAR_MIN;
   private YEAR_MAX;
 
+  private readonly MAX_AGE = 80;
+
   @ViewChild('day') dayInputRef: ElementRef;
   @ViewChild('month') monthInputRef: ElementRef;
   @ViewChild('year') yearInputRef: ElementRef;
@@ -53,7 +55,7 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
     const currentYear = new Date().getFullYear();
     switch (this.type) {
       case DateType.Birthday:
-        this.YEAR_MIN = (currentYear - 80).toString();
+        this.YEAR_MIN = (currentYear - this.MAX_AGE).toString();
         this.YEAR_MAX = currentYear.toString();
         break;
       case DateType.Default:
@@ -128,6 +130,7 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
     if (this.isNumberKey(event.keyCode)) {
       if (this.monthValue.length === 0) {
         if (Number(event.key) > 1) {
+          console.log('0' + event.key);
           this.monthValue = '0' + event.key;
           event.preventDefault();
           this.yearNode.focus();
