@@ -172,9 +172,11 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
             return true;
           } else if (currentValue > currentYear) {
             this.yearValue = '19' + currentValue.toString();
+            this.setOuterValue();
             return false;
           } else if (currentValue <= currentYear) {
             this.yearValue = '20' + currentValue.toString();
+            this.setOuterValue();
             return false;
           }
         }
