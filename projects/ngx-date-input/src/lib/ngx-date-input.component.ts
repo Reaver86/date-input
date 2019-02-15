@@ -7,23 +7,23 @@ export enum DateType {
 }
 
 @Component({
-  selector: 'app-date-input',
-  templateUrl: './date-input.component.html',
-  styleUrls: ['./date-input.component.scss'],
+  selector: 'ngx-date-input',
+  templateUrl: './ngx-date-input.component.html',
+  styleUrls: ['./ngx-date-input.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: DateInputComponent,
+      useExisting: NgxDateInputComponent,
       multi: true
     }
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DateInputComponent implements ControlValueAccessor, OnInit {
+export class NgxDateInputComponent implements ControlValueAccessor, OnInit {
   @Input() placeholder = '21.01.1990';
   @Input() type = DateType.Default;
 
-  onChange: (string) => void;
+  onChange: (str) => void;
   onTouched: () => void;
   disabled: boolean;
 
@@ -292,7 +292,7 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
     this.monthValue = '0' + this.monthValue;
   }
 
-  private matchGermanDate(value: string): string[] {
+  private matchGermanDate(value: string): string[] | null {
     const matches = value.match(/(\d{1,2})[.-/]?(\d{1,2})[.-/](\d{2,4})/);
     if (matches) {
       matches.shift(); // remove the whole match
@@ -308,8 +308,8 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
     return date instanceof Date && !isNaN(date.getTime());
   }
 
-  private formatWithLeadingZero(number: number): string {
-    return number < 10 ? '0' + number : '' + number;
+  private formatWithLeadingZero(nr: number): string {
+    return nr < 10 ? '0' + nr : '' + nr;
   }
 
   private get dayNode(): HTMLInputElement {

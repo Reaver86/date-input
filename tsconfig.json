@@ -17,6 +17,14 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "ngx-date-input": [
+        "dist/ngx-date-input"
+      ],
+      "ngx-date-input/*": [
+        "dist/ngx-date-input/*"
+      ]
+    }
   }
 }

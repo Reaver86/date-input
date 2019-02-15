@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { DateType } from './date-input/date-input.component';
+import { DateType } from '../../projects/ngx-date-input/src/lib/ngx-date-input.component';
 
 @Component({
   selector: 'app-root',

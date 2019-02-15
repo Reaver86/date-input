@@ -2,7 +2,18 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
-import { DateInputComponent, DateType } from './date-input.component';
+import { DateType, NgxDateInputComponent } from './ngx-date-input.component';
+
+@Component({
+  template: `
+      <ngx-date-input [formControl]="date" [placeholder]="placeholder" [type]="type"></ngx-date-input>
+    `
+})
+class TestHostComponent {
+  date = new FormControl('');
+  placeholder = '01.08.1980';
+  type = DateType.Birthday;
+}
 
 describe('DateInputComponent', () => {
   let component: TestHostComponent;
@@ -12,7 +23,7 @@ describe('DateInputComponent', () => {
   beforeEach(() => {
     fixture = TestBed.configureTestingModule({
       imports: [ReactiveFormsModule],
-      declarations: [TestHostComponent, DateInputComponent]
+      declarations: [TestHostComponent, NgxDateInputComponent]
     }).createComponent(TestHostComponent);
 
     component = fixture.componentInstance;
@@ -34,18 +45,6 @@ describe('DateInputComponent', () => {
     expect(getInput('day').value).toEqual('12');
     expect(getInput('month').value).toEqual('03');
     expect(getInput('year').value).toEqual('1998');
-  });
-
-  it('should set disabled for all fields', () => {
-    expect(getInput('day').disabled).toEqual(false);
-    expect(getInput('month').disabled).toEqual(false);
-    expect(getInput('year').disabled).toEqual(false);
-
-    component.date.disable();
-    fixture.detectChanges();
-    expect(getInput('day').disabled).toEqual(true);
-    expect(getInput('month').disabled).toEqual(true);
-    expect(getInput('year').disabled).toEqual(true);
   });
 
   it('should set touched only when all fields are touched', () => {
@@ -166,16 +165,5 @@ describe('DateInputComponent', () => {
     });
     htmlInputElement.dispatchEvent(event);
     fixture.detectChanges();
-  }
-
-  @Component({
-    template: `
-      <app-date-input [formControl]="date" [placeholder]="placeholder" [type]="type"></app-date-input>
-    `
-  })
-  class TestHostComponent {
-    date = new FormControl('');
-    placeholder = '01.08.1980';
-    type = DateType.Birthday;
   }
 });

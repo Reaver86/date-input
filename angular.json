@@ -133,6 +133,41 @@
           }
         }
       }
+    },
+    "ngx-date-input": {
+      "root": "projects/ngx-date-input",
+      "sourceRoot": "projects/ngx-date-input/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ngx-date-input/tsconfig.lib.json",
+            "project": "projects/ngx-date-input/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ngx-date-input/src/test.ts",
+            "tsConfig": "projects/ngx-date-input/tsconfig.spec.json",
+            "karmaConfig": "projects/ngx-date-input/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ngx-date-input/tsconfig.lib.json",
+              "projects/ngx-date-input/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "date-input"
