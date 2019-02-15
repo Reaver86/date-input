@@ -2,8 +2,8 @@ import { Component, ElementRef, ViewChild, Input, Renderer2, OnInit } from '@ang
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 export enum DateType {
-  Birthday = "BIRTHDAY",
-  Default = "DEFAULT"
+  Birthday = 'BIRTHDAY',
+  Default = 'DEFAULT'
 }
 
 @Component({
