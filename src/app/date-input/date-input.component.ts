@@ -130,7 +130,6 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
     if (this.isNumberKey(event.keyCode)) {
       if (this.monthValue.length === 0) {
         if (Number(event.key) > 1) {
-          console.log('0' + event.key);
           this.monthValue = '0' + event.key;
           event.preventDefault();
           this.yearNode.focus();
@@ -238,6 +237,11 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
     }
   }
 
+  onInput() {
+    event.stopPropagation();
+    this.setOuterValue();
+  }
+
   onTouchedDay(): void {
     this.dayTouched = true;
     if (this.allTouched()) {
@@ -263,7 +267,12 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
     event.preventDefault();
     event.stopPropagation();
 
-    const value = event.clipboardData.getData('text/plain');
+    let value;
+    if (event.clipboardData) {
+      value = event.clipboardData.getData('text/plain');
+    } else { // ie
+      value = (window as any).clipboardData.getData('Text');
+    }
     const matches = this.matchGermanDate(value);
     if (matches) {
       this.dayValue = matches[0];
