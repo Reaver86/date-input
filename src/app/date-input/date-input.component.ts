@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, Input, Renderer2, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 export enum DateType {
@@ -16,7 +16,8 @@ export enum DateType {
       useExisting: DateInputComponent,
       multi: true
     }
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DateInputComponent implements ControlValueAccessor, OnInit {
   @Input() placeholder = '21.01.1990';
