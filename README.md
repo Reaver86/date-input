@@ -1,6 +1,6 @@
 # NgxDateInput
 
-![Screenshot](projects/ngx-date-input/src/screenshot.png)
+![Screenshot](screenshot.png)
 
 Date Input Component, focused on Keyboard Input, Bootstrap Style, intended to use in an angular project.
 

@@ -36,12 +36,12 @@ export class NgxDateInputComponent implements ControlValueAccessor, OnInit {
   private readonly KEYCODE_PUNKT = 190;
   private readonly KEYCODE_PASTE = 118;
 
-  private readonly DAY_MIN = '1';
-  private readonly DAY_MAX = '31';
-  private readonly MONTH_MIN = '1';
-  private readonly MONTH_MAX = '12';
-  private YEAR_MIN;
-  private YEAR_MAX;
+  readonly DAY_MIN = '1';
+  readonly DAY_MAX = '31';
+  readonly MONTH_MIN = '1';
+  readonly MONTH_MAX = '12';
+  YEAR_MIN;
+  YEAR_MAX;
 
   private readonly MAX_AGE = 80;
 
@@ -292,7 +292,7 @@ export class NgxDateInputComponent implements ControlValueAccessor, OnInit {
     this.monthValue = '0' + this.monthValue;
   }
 
-  private matchGermanDate(value: string): string[] | null {
+  matchGermanDate(value: string): string[] | null {
     const matches = value.match(/(\d{1,2})[.-/]?(\d{1,2})[.-/](\d{2,4})/);
     if (matches) {
       matches.shift(); // remove the whole match
