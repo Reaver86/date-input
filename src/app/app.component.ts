@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { DateType } from '../../projects/ngx-date-input/src/lib/ngx-date-input.component';
+import { NgxDateType } from '../../projects/ngx-date-input/src/lib/ngx-date-input.component';
 
 @Component({
   selector: 'app-root',
@@ -9,5 +9,5 @@ import { DateType } from '../../projects/ngx-date-input/src/lib/ngx-date-input.c
 })
 export class AppComponent {
   date = new FormControl('');
-  dateType = DateType.Birthday;
+  dateType = NgxDateType.Birthday;
 }

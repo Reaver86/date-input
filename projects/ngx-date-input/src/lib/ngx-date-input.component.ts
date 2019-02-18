@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-export enum DateType {
+export enum NgxDateType {
   Birthday = 'BIRTHDAY',
   Default = 'DEFAULT'
 }
@@ -21,7 +21,7 @@ export enum DateType {
 })
 export class NgxDateInputComponent implements ControlValueAccessor, OnInit {
   @Input() placeholder = '21.01.1990';
-  @Input() type = DateType.Default;
+  @Input() type = NgxDateType.Default;
 
   onChange: (str) => void;
   onTouched: () => void;
@@ -55,11 +55,11 @@ export class NgxDateInputComponent implements ControlValueAccessor, OnInit {
   ngOnInit(): void {
     const currentYear = new Date().getFullYear();
     switch (this.type) {
-      case DateType.Birthday:
+      case NgxDateType.Birthday:
         this.YEAR_MIN = (currentYear - this.MAX_AGE).toString();
         this.YEAR_MAX = currentYear.toString();
         break;
-      case DateType.Default:
+      case NgxDateType.Default:
       default:
         this.YEAR_MIN = 1900;
         this.YEAR_MAX = 2100;
@@ -167,7 +167,7 @@ export class NgxDateInputComponent implements ControlValueAccessor, OnInit {
   onKeydownYear(event: KeyboardEvent): boolean {
     if (this.isNumberKey(event.keyCode)) {
 
-      if (this.type === DateType.Birthday) {
+      if (this.type === NgxDateType.Birthday) {
         if (this.yearValue.length === 1) {
           const currentValue = Number(this.yearValue + event.key);
           const currentYear = this.YEAR_MAX.slice(-2);
@@ -238,7 +238,7 @@ export class NgxDateInputComponent implements ControlValueAccessor, OnInit {
     }
   }
 
-  onInput() {
+  onInput(event: KeyboardEvent) {
     event.stopPropagation();
     this.setOuterValue();
   }

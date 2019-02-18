@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
-import { DateType, NgxDateInputComponent } from './ngx-date-input.component';
+import { NgxDateType, NgxDateInputComponent } from './ngx-date-input.component';
 
 @Component({
   template: `
@@ -12,7 +12,7 @@ import { DateType, NgxDateInputComponent } from './ngx-date-input.component';
 class TestHostComponent {
   date = new FormControl('');
   placeholder = '01.08.1980';
-  type = DateType.Birthday;
+  type = NgxDateType.Birthday;
 }
 
 describe('DateInputComponent', () => {
