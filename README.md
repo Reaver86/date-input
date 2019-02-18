@@ -29,6 +29,7 @@ if the first number is 2 or higher, a '0' is automatically added in front of it 
 ## Api
 
 placeholder: string
+
 type: 'DEFAULT' | 'BIRTHDAY'
 
 type birthday additionally restricts year values to the range 1939 to 2019 (80 years up to this current year).
