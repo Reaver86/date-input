@@ -5069,6 +5069,13 @@ ng-packagr@^4.2.0:
     uglify-js "^3.0.7"
     update-notifier "^2.3.0"
 
+ngx-date-input@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/ngx-date-input/-/ngx-date-input-0.0.2.tgz#989c74cbe5c2333a61683cf5c02771eadec82a51"
+  integrity sha512-yFk5hIu96C2rVZfNeC+rluZKncW8M4RcEdQ0NtJGFZc3f0RunZM5DDeNSxBft1hZCTx377R3/zxlOrs/YfKSig==
+  dependencies:
+    tslib "^1.9.0"
+
 nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"

@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
-import { NgxDateInputModule } from '../../projects/ngx-date-input/src/lib/ngx-date-input.module';
+import { NgxDateInputModule } from 'ngx-date-input';
 
 @NgModule({
   declarations: [AppComponent],

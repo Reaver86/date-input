@@ -17,7 +17,8 @@
     "copy-files": "npm run copy-license && npm run copy-readme && npm run copy-screenshot",
     "build_lib": "ng build ngx-date-input",
     "npm_pack": "cd dist/ngx-date-input && npm pack",
-    "package": "npm run build_lib && npm run copy-files && npm run npm_pack"
+    "package": "npm run build_lib && npm run copy-files && npm run npm_pack",
+    "prepackage": "cd projects/ngx-date-input && npm version patch"
   },
   "private": true,
   "dependencies": {
@@ -31,6 +32,7 @@
     "@angular/router": "~7.2.4",
     "bootstrap": "4.1.3",
     "core-js": "^2.5.4",
+    "ngx-date-input": "^0.0.2",
     "rxjs": "~6.4.0",
     "tslib": "^1.9.0",
     "zone.js": "~0.8.29"
